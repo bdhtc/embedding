@@ -1,5 +1,7 @@
 package Learn;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,7 +64,7 @@ public class LearnW extends Thread {
         int rowNum = 0;
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(linkGraph)));
         while ((temp212 = br.readLine()) != null) {
-            String[] strs = temp212.split(" ");
+            String[] strs = StringUtils.split(temp212, " ");
             for (int i = 0; i < strs.length; i++) {
                 graph[rowNum][i] = Double.parseDouble(strs[i]);
             }
@@ -867,22 +869,27 @@ public class LearnW extends Thread {
 
     public static void main(String[] args) throws Exception {
         //java -jar mmdw.jar Cora data/ -3
+        String input1 = "Cora";
+        String input2 = "data/";
+        int input3 = -3;
 
+        //文件路径定义
         // TODO Auto-generated method stub
         //********SWITCH**********
         test_switch = false;
         //********FIXED***********
         StoreAlphaWeight.dimensionForSVM = dimension;//fixed
-        source = args[0];//1st input
+        source = input1;//1st input
         System.out.println("File type is : " + source);
-        modelFile = args[1];//2nd input
+        modelFile = input2;//2nd input
         System.out.println("Folder of data is at : " + modelFile);
-        alphaLevel = Integer.valueOf(args[2]);
+        alphaLevel = input3;
         System.out.println("AlphaBias Level : " + alphaLevel);
         labelFile = modelFile + "/Category/" + source + "_category.txt";
         linkGraphFile = modelFile + "/Net/" + source + "_net.txt";
         W_DW = modelFile + "/W_DW/W_" + source + "_LINE.txt";
         //********THREAD**********
+
         List<LearnW> lls = new ArrayList<>();
         for (int i = 0; i < 9; i++) {
             LearnW ls = new LearnW();
