@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Net">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/data/Net.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
