@@ -3,6 +3,7 @@ package Learn;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -41,8 +42,7 @@ public class LearnW extends Thread {
     public LearnW() throws Exception {
         BufferedReader trUsers = new BufferedReader(new InputStreamReader(new FileInputStream(labelFile)));
         int countDataNum = 0;
-        String line = "";
-        while ((line = trUsers.readLine()) != null) {
+        while (trUsers.readLine() != null) {
             countDataNum++;
         }
         trUsers.close();
@@ -102,7 +102,7 @@ public class LearnW extends Thread {
      * first add bias to W, then use W to effect H, and finally use
      * H to affect W.
      */
-    public void trainW() throws Exception, IOException {
+    public void trainW() throws Exception {
         double last_loss = 0;
         if (test_switch) {
             String temp212;
@@ -126,15 +126,15 @@ public class LearnW extends Thread {
              * */
             if (init) {
                 for (int step = 0; step < steps_init; step++) {
-                    System.out.println(new Date().toLocaleString() + '\t' + "iter = " + step + '\t' + "Process for training" + '\t' + (step * 100) / steps_init + "%");
-                    double drv[][] = new double[dimension][dataNum];
-                    double rt[][] = new double[dataNum * dimension][1];
-                    double dt[][] = new double[dataNum * dimension][1];
-                    double B[][] = H;
-                    double Hess[][] = new double[dimension][dimension];
-                    double store2BB[][] = new double[dimension][dimension];
-                    double vecW[][] = new double[dataNum * dimension][1];
-                    double vecH[][] = new double[dataNum * dimension][1];
+                    System.out.println(new Date().toString() + '\t' + "iter = " + step + '\t' + "Process for training" + '\t' + (step * 100) / steps_init + "%");
+                    double[][] drv = new double[dimension][dataNum];
+                    double[][] rt = new double[dataNum * dimension][1];
+                    double[][] dt = new double[dataNum * dimension][1];
+                    double[][] B = H;
+                    double[][] Hess = new double[dimension][dimension];
+                    double[][] store2BB = new double[dimension][dimension];
+                    double[][] vecW = new double[dataNum * dimension][1];
+                    double[][] vecH = new double[dataNum * dimension][1];
                     for (int i = 0; i < dimension; i++) {
                         for (int j = 0; j < dimension; j++)
                             for (int m = 0; m < dataNum; m++)
@@ -189,12 +189,12 @@ public class LearnW extends Thread {
                             System.out.println("W norm = " + norm);
                             break;
                         } else {
-                            double rtrt = 0, dtHdt = 0, rtmprtmp = 0;
-                            double at = 0, bt = 0;
-                            double dtS[][] = new double[dimension][dataNum];
-                            double Hdt[][] = new double[dataNum * dimension][1];
-                            double storeHessdtS[][] = new double[dimension][dataNum];
-                            double rtmp[][] = new double[dataNum * dimension][1];
+                            double rtrt = 0, dtHdt = 0, rtmprtmp;
+                            double at, bt;
+                            double[][] dtS = new double[dimension][dataNum];
+                            double[][] Hdt = new double[dataNum * dimension][1];
+                            double[][] storeHessdtS = new double[dimension][dataNum];
+                            double[][] rtmp = new double[dataNum * dimension][1];
                             for (int i = 0; i < dataNum; i++) {
                                 for (int j = 0; j < dimension; j++)
                                     dtS[j][i] = dt[i * dimension + j][0];
@@ -235,8 +235,8 @@ public class LearnW extends Thread {
                             W[i][j] = vecW[i * dimension + j][0];
                     }
                     //update H
-                    double storeWW[][] = new double[dimension][dimension];
-                    double storeWWH[][] = new double[dimension][dataNum];
+                    double[][] storeWW = new double[dimension][dimension];
+                    double[][] storeWWH = new double[dimension][dataNum];
                     for (int i = 0; i < dimension; i++) {
                         for (int j = 0; j < dimension; j++)
                             for (int m = 0; m < dataNum; m++)
@@ -282,12 +282,12 @@ public class LearnW extends Thread {
                             System.out.println("H norm = " + norm);
                             break;
                         } else {
-                            double rtrt = 0, dtHdt = 0, rtmprtmp = 0;
-                            double at = 0, bt = 0;
-                            double dtS[][] = new double[dimension][dataNum];
-                            double Hdt[][] = new double[dataNum * dimension][1];
-                            double storeHdt[][] = new double[dimension][dataNum];
-                            double rtmp[][] = new double[dataNum * dimension][1];
+                            double rtrt = 0, dtHdt = 0, rtmprtmp;
+                            double at, bt;
+                            double[][] dtS = new double[dimension][dataNum];
+                            double[][] Hdt = new double[dataNum * dimension][1];
+                            double[][] storeHdt = new double[dimension][dataNum];
+                            double[][] rtmp = new double[dataNum * dimension][1];
                             for (int i = 0; i < dataNum; i++) {
                                 for (int j = 0; j < dimension; j++)
                                     dtS[j][i] = dt[i * dimension + j][0];
@@ -385,13 +385,13 @@ public class LearnW extends Thread {
                     }
                 }
                 for (int step = 0; step < steps_after; step++) {
-                    System.out.println(new Date().toLocaleString() + '\t' + "iter = " + step + '\t' + "Process 2 for training" + '\t' + (step * 100) / steps_after + "%");
-                    double drv[][] = new double[dimension][dataNum];
-                    double rt[][] = new double[dataNum * dimension][1];
-                    double dt[][] = new double[dataNum * dimension][1];
-                    double vecH[][] = new double[dataNum * dimension][1];
-                    double storeWW[][] = new double[dimension][dimension];
-                    double storeWWH[][] = new double[dimension][dataNum];
+                    System.out.println(new Date().toString() + '\t' + "iter = " + step + '\t' + "Process 2 for training" + '\t' + (step * 100) / steps_after + "%");
+                    double[][] drv = new double[dimension][dataNum];
+                    double[][] rt = new double[dataNum * dimension][1];
+                    double[][] dt = new double[dataNum * dimension][1];
+                    double[][] vecH = new double[dataNum * dimension][1];
+                    double[][] storeWW = new double[dimension][dimension];
+                    double[][] storeWWH = new double[dimension][dataNum];
                     for (int i = 0; i < dimension; i++) {
                         for (int j = 0; j < dimension; j++)
                             for (int m = 0; m < dataNum; m++)
@@ -438,11 +438,11 @@ public class LearnW extends Thread {
                             break;
                         } else {
                             double rtrt = 0, dtHdt = 0, rtmprtmp = 0;
-                            double at = 0, bt = 0;
-                            double dtS[][] = new double[dimension][dataNum];
-                            double Hdt[][] = new double[dataNum * dimension][1];
-                            double storeHdt[][] = new double[dimension][dataNum];
-                            double rtmp[][] = new double[dataNum * dimension][1];
+                            double at, bt;
+                            double[][] dtS = new double[dimension][dataNum];
+                            double[][] Hdt = new double[dataNum * dimension][1];
+                            double[][] storeHdt = new double[dimension][dataNum];
+                            double[][] rtmp = new double[dataNum * dimension][1];
                             for (int i = 0; i < dataNum; i++) {
                                 for (int j = 0; j < dimension; j++)
                                     dtS[j][i] = dt[i * dimension + j][0];
@@ -525,14 +525,14 @@ public class LearnW extends Thread {
                     }
                 }
                 for (int step2 = 0; step2 < steps_after; step2++) {
-                    System.out.println(new Date().toLocaleString() + '\t' + "iter = " + step2 + '\t' + "Process 2 for training" + '\t' + (step2 * 100) / steps_after + "%");
-                    double B[][] = H;
-                    double Hess[][] = new double[dimension][dimension];
-                    double store2BB[][] = new double[dimension][dimension];
-                    double vecW[][] = new double[dataNum * dimension][1];
-                    double drv[][] = new double[dimension][dataNum];
-                    double rt[][] = new double[dataNum * dimension][1];
-                    double dt[][] = new double[dataNum * dimension][1];
+                    System.out.println(LocalDateTime.now().toString() + '\t' + "iter = " + step2 + '\t' + "Process 2 for training" + '\t' + (step2 * 100) / steps_after + "%");
+                    double[][] B = H;
+                    double[][] Hess = new double[dimension][dimension];
+                    double[][] store2BB = new double[dimension][dimension];
+                    double[][] vecW = new double[dataNum * dimension][1];
+                    double[][] drv = new double[dimension][dataNum];
+                    double[][] rt = new double[dataNum * dimension][1];
+                    double[][] dt = new double[dataNum * dimension][1];
                     for (int i = 0; i < dimension; i++) {
                         for (int j = 0; j < dimension; j++)
                             for (int m = 0; m < dataNum; m++)
@@ -662,23 +662,23 @@ public class LearnW extends Thread {
      * 0 stands for user in test set and 1 stands for user in train set.
      */
     public void makeTrainTest() throws Exception {
-        int labels[] = new int[dataNum];
-        int labelClassNum[] = new int[20];
+        int[] labels = new int[dataNum];
+        int[] labelClassNum = new int[20];
         BufferedReader trUsers = new BufferedReader(new InputStreamReader(new FileInputStream(labelFile)));
         String line = "";
         while ((line = trUsers.readLine()) != null) {
             String[] strs = line.split("\t");
-            labels[Integer.valueOf(strs[0])] = Integer.valueOf(strs[1]);
-            labelClassNum[labels[Integer.valueOf(strs[0])]]++;
+            labels[Integer.parseInt(strs[0])] = Integer.parseInt(strs[1]);
+            labelClassNum[labels[Integer.parseInt(strs[0])]]++;
         }
         trUsers.close();
         int countClassNum = 0;
-        for (int i = 0; i < labelClassNum.length; i++) {
-            if (labelClassNum[i] != 0)
+        for (int k : labelClassNum) {
+            if (k != 0)
                 countClassNum++;
         }
-        int labelClass[] = new int[countClassNum];
-        Random r_classifier = new Random(123l);
+        int[] labelClass = new int[countClassNum];
+        Random r_classifier = new Random(123L);
         for (int i = 0; i < dataNum; i++) {
             double nextRandom = r_classifier.nextDouble();
             if (nextRandom <= limitRandom) {
@@ -688,7 +688,7 @@ public class LearnW extends Thread {
         }
         for (int i = 0; i < labelClass.length; i++) {
             if (labelClass[i] == 0) {
-                Random r_classifier2 = new Random(123l);
+                Random r_classifier2 = new Random(123L);
                 for (int j = 0; j < dataNum; j++) {
                     if (labels[j] == i) {
                         double nextRandom2 = r_classifier2.nextDouble();
